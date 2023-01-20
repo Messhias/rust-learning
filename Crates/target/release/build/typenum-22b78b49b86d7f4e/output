@@ -1,0 +1,3 @@
+cargo:rerun-if-changed=build/main.rs
+cargo:rustc-env=TYPENUM_BUILD_CONSTS=/Users/collegia/Documents/projects/Rust/rust-learning/Crates/target/release/build/typenum-22b78b49b86d7f4e/out/consts.rs
+cargo:rustc-env=TYPENUM_BUILD_OP=/Users/collegia/Documents/projects/Rust/rust-learning/Crates/target/release/build/typenum-22b78b49b86d7f4e/out/op.rs
