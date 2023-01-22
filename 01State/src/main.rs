@@ -9,7 +9,7 @@ use rocket::{Build, Rocket, State};
 use std::collections::HashMap;
 use std::io::Cursor;
 use std::vec::Vec;
-use std::sync::atomic::AtomicU64;
+use std::sync::atomic::{AtomicU64, Ordering};
 
 struct VisitorCounter {
     visitor: AtomicU64,
@@ -112,10 +112,10 @@ lazy_static! {
 
 impl VisitorCounter {
     fn increment_counter(&self) {
-        self.visitor.fetch_add(1, Orderning::Relaxed);
+        self.visitor.fetch_add(1, Ordering::Relaxed);
         println!(
             "The number of visitor is: {}",
-            self.visitor.load(Orderning::Relaxed)
+            self.visitor.load(Ordering::Relaxed)
         );
     }
 }
@@ -141,7 +141,7 @@ fn users<'a>(
     counter: &State<VisitorCounter>,
     name_grade: NameGrade,
     filters: Option<Filters>,
-) -> Result<NewUser, Status> {
+) -> Result<NewUser<'a>, Status> {
     counter.increment_counter();
     let users: Vec<&User> = USERS
         .values()
