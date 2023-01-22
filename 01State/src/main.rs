@@ -5,10 +5,15 @@ use lazy_static::lazy_static;
 use rocket::http::{ContentType, Status};
 use rocket::request::{FromParam, Request};
 use rocket::response::{self, Responder, Response};
-use rocket::{Build, Rocket};
+use rocket::{Build, Rocket, State};
 use std::collections::HashMap;
 use std::io::Cursor;
 use std::vec::Vec;
+use std::sync::atomic::AtomicU64;
+
+struct VisitorCounter {
+    visitor: AtomicU64,
+}
 
 #[derive(FromForm)]
 struct Filters {
@@ -105,6 +110,16 @@ lazy_static! {
     };
 }
 
+impl VisitorCounter {
+    fn increment_counter(&self) {
+        self.visitor.fetch_add(1, Orderning::Relaxed);
+        println!(
+            "The number of visitor is: {}",
+            self.visitor.load(Orderning::Relaxed)
+        );
+    }
+}
+
 #[catch(404)]
 fn not_found(req: &Request) -> String {
     format!("We cannot find this page {}.", req.uri())
@@ -116,12 +131,18 @@ fn forbidden(req: &Request) -> String {
 }
 
 #[get("/user/<uuid>", rank = 1, format = "text/plain")]
-fn user(uuid: &str) -> Option<&User> {
+fn user<'a>(counter: &State<VisitorCounter>, uuid: &str) -> Option<&'a User> {
+    counter.increment_counter();
     USERS.get(uuid)
 }
 
 #[get("/users/<name_grade>?<filters..>")]
-fn users(name_grade: NameGrade, filters: Option<Filters>) -> Result<NewUser, Status> {
+fn users<'a>(
+    counter: &State<VisitorCounter>,
+    name_grade: NameGrade,
+    filters: Option<Filters>,
+) -> Result<NewUser, Status> {
+    counter.increment_counter();
     let users: Vec<&User> = USERS
         .values()
         .filter(|user| user.name.contains(&name_grade.name) && user.grade == name_grade.grade)
@@ -142,6 +163,11 @@ fn users(name_grade: NameGrade, filters: Option<Filters>) -> Result<NewUser, Sta
 
 #[launch]
 fn rocket() -> Rocket<Build> {
-    rocket::build().mount("/", routes![user, users])
+    let visitor_counter = VisitorCounter {
+        visitor: AtomicU64::new(0),
+    };
+    rocket::build()
+        .manage(visitor_counter)
+        .mount("/", routes![user, users])
         .register("/", catchers![not_found, forbidden])
 }
