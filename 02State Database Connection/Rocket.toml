@@ -1,1 +1,8 @@
-ROCKET_DATABASE_URL="postgresql://localhost:5432/rust_learning"
+[default]
+database_url='postgresql://localhost:5432/rust_learning'
+
+[debug]
+database_url='postgresql://localhost:5432/rust_learning'
+
+[release]
+database_url='postgresql://localhost:5432/rust_learning'
