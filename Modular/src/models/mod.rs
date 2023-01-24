@@ -7,3 +7,4 @@ pub mod text_post;
 pub mod user;
 pub mod user_status;
 pub mod video_post;
+pub mod bool_wrapper;
