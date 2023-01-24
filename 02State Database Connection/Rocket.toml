@@ -1,8 +1,8 @@
-[default]
-database_url='postgresql://localhost:5432/rust_learning'
+[default.databases.main_connection]
+url='postgresql://localhost:5432/rust_learning'
 
-[debug]
-database_url='postgresql://localhost:5432/rust_learning'
+[debug.databases.main_connection]
+url='postgresql://localhost:5432/rust_learning'
 
-[release]
-database_url='postgresql://localhost:5432/rust_learning'
+[release.databases.main_connection]
+url='postgresql://localhost:5432/rust_learning'

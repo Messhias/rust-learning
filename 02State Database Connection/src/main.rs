@@ -3,13 +3,15 @@ extern crate rocket;
 
 use rocket::fairing::{self, Fairing, Info, Kind};
 use rocket::fs::{relative, NamedFile};
-use rocket::http::{ContentType, Status, Header};
+use rocket::http::{ContentType, Header, Status};
 use rocket::request::{FromParam, Request};
 use rocket::response::{self, Responder, Response};
-use rocket::{Build, Data, Orbit, Rocket, State};
-use serde::Deserialize;
-use sqlx::postgres::{PgPool, PgPoolOptions};
-use sqlx::FromRow;
+use rocket::{Build, Data, Orbit, Rocket};
+use rocket_db_pools::{
+    sqlx,
+    sqlx::{FromRow, PgPool},
+    Connection, Database,
+};
 use std::io::Cursor;
 use std::path::Path;
 use std::sync::atomic::{AtomicU64, Ordering};
@@ -155,27 +157,26 @@ impl VisitorCounter {
     }
 }
 
-#[derive(Deserialize)]
-struct Config {
-    database_url: String,
-}
+#[derive(Database)]
+#[database("main_connection")]
+struct DBConnection(PgPool);
 
 #[get("/user/<uuid>", rank = 1, format = "text/plain")]
 async fn user(
-    pool: &rocket::State<PgPool>,
+    mut db: Connection<DBConnection>,
     uuid: &str,
 ) -> Result<User, Status> {
     let parsed_uuid = Uuid::parse_str(uuid).map_err(|_| Status::BadRequest)?;
 
     let user = sqlx::query_as!(User, "SELECT * FROM users WHERE uuid = $1", parsed_uuid)
-        .fetch_one(pool.inner())
+        .fetch_one(&mut *db)
         .await;
     user.map_err(|_| Status::NotFound)
 }
 
 #[get("/users/<name_grade>?<filters..>")]
 async fn users(
-    pool: &rocket::State<PgPool>,
+    mut db: Connection<DBConnection>,
     name_grade: NameGrade<'_>,
     filters: Option<Filters>,
 ) -> Result<NewUser, Status> {
@@ -189,7 +190,7 @@ async fn users(
     if let Some(fts) = &filters {
         query = query.bind(fts.age as i16).bind(fts.active);
     }
-    let unwrapped_users = query.fetch_all(pool.inner()).await;
+    let unwrapped_users = query.fetch_all(&mut *db).await;
     let users: Vec<User> = unwrapped_users.map_err(|_| Status::InternalServerError)?;
     if users.is_empty() {
         Err(Status::NotFound)
@@ -219,17 +220,6 @@ fn forbidden(req: &Request) -> String {
 async fn rocket() -> Rocket<Build> {
     let our_rocket = rocket::build();
 
-    let config: Config = our_rocket
-        .figment()
-        .extract()
-        .expect("Incorrect Rocket.toml configuration");
-
-    let pool = PgPoolOptions::new()
-        .max_connections(5)
-        .connect(&config.database_url)
-        .await
-        .expect("Failed to connect to database");
-
     let visitor_counter = VisitorCounter {
         visitor: AtomicU64::new(0),
     };
@@ -238,7 +228,7 @@ async fn rocket() -> Rocket<Build> {
     our_rocket
         .attach(visitor_counter)
         .attach(x_trace_id)
-        .manage(pool)
+        .attach(DBConnection::init())
         .mount("/", routes![user, users, favicon])
         .register("/", catchers![not_found, forbidden])
 }

@@ -1,0 +1,9 @@
+/Users/collegia/Documents/projects/Rust/rust-learning/02State Database Connection/target/debug/deps/rocket_db_pools-37a01b9ac69f5294.rmeta: /Users/collegia/.cargo/registry/src/github.com-1ecc6299db9ec823/rocket_db_pools-0.1.0-rc.2/src/lib.rs /Users/collegia/.cargo/registry/src/github.com-1ecc6299db9ec823/rocket_db_pools-0.1.0-rc.2/src/database.rs /Users/collegia/.cargo/registry/src/github.com-1ecc6299db9ec823/rocket_db_pools-0.1.0-rc.2/src/error.rs /Users/collegia/.cargo/registry/src/github.com-1ecc6299db9ec823/rocket_db_pools-0.1.0-rc.2/src/pool.rs /Users/collegia/.cargo/registry/src/github.com-1ecc6299db9ec823/rocket_db_pools-0.1.0-rc.2/src/config.rs
+
+/Users/collegia/Documents/projects/Rust/rust-learning/02State Database Connection/target/debug/deps/rocket_db_pools-37a01b9ac69f5294.d: /Users/collegia/.cargo/registry/src/github.com-1ecc6299db9ec823/rocket_db_pools-0.1.0-rc.2/src/lib.rs /Users/collegia/.cargo/registry/src/github.com-1ecc6299db9ec823/rocket_db_pools-0.1.0-rc.2/src/database.rs /Users/collegia/.cargo/registry/src/github.com-1ecc6299db9ec823/rocket_db_pools-0.1.0-rc.2/src/error.rs /Users/collegia/.cargo/registry/src/github.com-1ecc6299db9ec823/rocket_db_pools-0.1.0-rc.2/src/pool.rs /Users/collegia/.cargo/registry/src/github.com-1ecc6299db9ec823/rocket_db_pools-0.1.0-rc.2/src/config.rs
+
+/Users/collegia/.cargo/registry/src/github.com-1ecc6299db9ec823/rocket_db_pools-0.1.0-rc.2/src/lib.rs:
+/Users/collegia/.cargo/registry/src/github.com-1ecc6299db9ec823/rocket_db_pools-0.1.0-rc.2/src/database.rs:
+/Users/collegia/.cargo/registry/src/github.com-1ecc6299db9ec823/rocket_db_pools-0.1.0-rc.2/src/error.rs:
+/Users/collegia/.cargo/registry/src/github.com-1ecc6299db9ec823/rocket_db_pools-0.1.0-rc.2/src/pool.rs:
+/Users/collegia/.cargo/registry/src/github.com-1ecc6299db9ec823/rocket_db_pools-0.1.0-rc.2/src/config.rs:
