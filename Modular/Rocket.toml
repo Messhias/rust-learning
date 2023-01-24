@@ -1,0 +1,3 @@
+[default]
+[default.databases.main_connection]
+url='postgresql://localhost:5432/rust_learning'

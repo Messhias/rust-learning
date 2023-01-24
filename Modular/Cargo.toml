@@ -1,0 +1,13 @@
+[package]
+name = "modular"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+rocket = { version="0.5.0-rc.2", features=["uuid"] }
+rocket_db_pools = { version="0.1.0-rc.2", features=["sqlx_postgres"] }
+sqlx = { version="0.6.2", features=["postgres", "uuid", "runtime-tokio-rustls", "chrono"] }
+chrono = "0.4.23"
+uuid = { version="1.2.2", features=["v4"] }
