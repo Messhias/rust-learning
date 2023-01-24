@@ -1,11 +1,12 @@
 #[macro_use]
 extern crate rocket;
 
+use rocket::fairing::{self, Fairing, Info, Kind};
 use rocket::fs::{relative, NamedFile};
-use rocket::http::{ContentType, Status};
+use rocket::http::{ContentType, Status, Header};
 use rocket::request::{FromParam, Request};
 use rocket::response::{self, Responder, Response};
-use rocket::{Build, Rocket, State};
+use rocket::{Build, Data, Orbit, Rocket, State};
 use serde::Deserialize;
 use sqlx::postgres::{PgPool, PgPoolOptions};
 use sqlx::FromRow;
@@ -14,6 +15,53 @@ use std::path::Path;
 use std::sync::atomic::{AtomicU64, Ordering};
 use std::vec::Vec;
 use uuid::Uuid;
+
+const X_TRACE_ID: &str = "X-TRACE-ID";
+
+struct XTraceId {}
+
+#[rocket::async_trait]
+impl Fairing for XTraceId {
+    fn info(&self) -> Info {
+        Info {
+            name: "X-TRACE-ID Injector",
+            kind: Kind::Request | Kind::Response,
+        }
+    }
+
+    async fn on_request(&self, req: &mut Request<'_>, _: &mut Data<'_>) {
+        let header = Header::new(X_TRACE_ID, Uuid:: new_v4().to_hyphenated().to_string());
+        req.add_header(header);
+    }
+
+    async fn on_response<'r>(&self, req: &'r Request<'_>, res: &mut Response< 'r>) {
+        let header = req.headers().get_one(X_TRACE_ID).unwrap();
+        res.set_header(Header::new(X_TRACE_ID, header));
+    }
+}
+
+#[rocket::async_trait]
+impl Fairing for VisitorCounter {
+    fn info(&self) -> Info {
+        Info {
+            name: "Visitor Counter",
+            kind: Kind::Ignite | Kind::Liftoff | Kind::Request,
+        }
+    }
+
+    async fn on_ignite(&self, rocket: Rocket<Build>) -> fairing::Result {
+        println!("Setting up visitor counter");
+        Ok(rocket)
+    }
+
+    async fn on_liftoff(&self, _: &Rocket<Orbit>) {
+        println!("Finish setting up visitor counter")
+    }
+
+    async fn on_request(&self, _: &mut Request<'_>, _: &mut Data<'_>) {
+        self.increment_counter();
+    }
+}
 
 #[derive(FromForm)]
 struct Filters {
@@ -114,11 +162,9 @@ struct Config {
 
 #[get("/user/<uuid>", rank = 1, format = "text/plain")]
 async fn user(
-    counter: &State<VisitorCounter>,
     pool: &rocket::State<PgPool>,
     uuid: &str,
 ) -> Result<User, Status> {
-    counter.increment_counter();
     let parsed_uuid = Uuid::parse_str(uuid).map_err(|_| Status::BadRequest)?;
 
     let user = sqlx::query_as!(User, "SELECT * FROM users WHERE uuid = $1", parsed_uuid)
@@ -129,12 +175,10 @@ async fn user(
 
 #[get("/users/<name_grade>?<filters..>")]
 async fn users(
-    counter: &State<VisitorCounter>,
     pool: &rocket::State<PgPool>,
     name_grade: NameGrade<'_>,
     filters: Option<Filters>,
 ) -> Result<NewUser, Status> {
-    counter.increment_counter();
     let mut query_str = String::from("SELECT * FROM users WHERE name LIKE $1 AND grade = $2");
     if filters.is_some() {
         query_str.push_str(" AND age = $3 AND active = $4");
@@ -189,9 +233,11 @@ async fn rocket() -> Rocket<Build> {
     let visitor_counter = VisitorCounter {
         visitor: AtomicU64::new(0),
     };
+    let x_trace_id = XTraceId{};
 
     our_rocket
-        .manage(visitor_counter)
+        .attach(visitor_counter)
+        .attach(x_trace_id)
         .manage(pool)
         .mount("/", routes![user, users, favicon])
         .register("/", catchers![not_found, forbidden])
