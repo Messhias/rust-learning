@@ -60,7 +60,11 @@ pub async fn get_users(
         html_string
             .push_str(format!(r#"<a href="/users/{}">See User</a><br/>"#, user.uuid).as_ref());
         html_string.push_str(
-            format!(r#"<a href="/users/edit/{}">Edit User</a><br/>"#, user.uuid).as_ref(),
+            format!(r#"
+                <a href="/users/edit/{}">Edit User</a><br/>
+                <br />
+                <hr />
+            "#, user.uuid).as_ref(),
         );
     }
     if let Some(pg) = new_pagination {
