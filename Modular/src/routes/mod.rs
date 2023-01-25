@@ -9,5 +9,5 @@ type HtmlResponse = Result<RawHtml<String>, Status>;
 
 #[get("/<_filename>")]
 pub async fn assets(_filename: &str) -> NamedFile {
-    todo!("will implement")
+    todo!("will implement later")
 }

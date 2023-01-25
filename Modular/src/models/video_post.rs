@@ -5,6 +5,6 @@ pub struct VideoPost(Post);
 
 impl DisplayPostContent for VideoPost {
     fn raw_html() -> String {
-        todo!("todo")
+        todo!("will implement later")
     }
 }

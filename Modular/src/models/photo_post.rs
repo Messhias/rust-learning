@@ -5,6 +5,6 @@ pub struct PhotoPost(Post);
 
 impl DisplayPostContent for PhotoPost {
     fn raw_html() -> String {
-        todo!("todo")
+        todo!("will implement later")
     }
 }

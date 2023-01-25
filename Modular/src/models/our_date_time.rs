@@ -5,6 +5,7 @@ use rocket::form::{self, DataField, FromFormField, ValueField};
 #[derive(Debug, sqlx::Type, Clone)]
 #[sqlx(transparent)]
 pub struct OurDateTime(pub DateTime<Utc>);
+
 #[rocket::async_trait]
 impl<'r> FromFormField<'r> for OurDateTime {
     fn from_value(field: ValueField<'r>) -> form::Result<'r, Self> {

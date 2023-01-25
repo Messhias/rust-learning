@@ -5,6 +5,6 @@ pub struct TextPost(Post);
 
 impl DisplayPostContent for TextPost {
     fn raw_html() -> String {
-        todo!("todo")
+        todo!("will implement later")
     }
 }
