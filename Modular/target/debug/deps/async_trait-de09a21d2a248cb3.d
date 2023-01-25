@@ -1,0 +1,11 @@
+/Users/collegia/Documents/projects/Rust/rust-learning/Modular/target/debug/deps/libasync_trait-de09a21d2a248cb3.dylib: /Users/collegia/.cargo/registry/src/github.com-1ecc6299db9ec823/async-trait-0.1.63/src/lib.rs /Users/collegia/.cargo/registry/src/github.com-1ecc6299db9ec823/async-trait-0.1.63/src/args.rs /Users/collegia/.cargo/registry/src/github.com-1ecc6299db9ec823/async-trait-0.1.63/src/bound.rs /Users/collegia/.cargo/registry/src/github.com-1ecc6299db9ec823/async-trait-0.1.63/src/expand.rs /Users/collegia/.cargo/registry/src/github.com-1ecc6299db9ec823/async-trait-0.1.63/src/lifetime.rs /Users/collegia/.cargo/registry/src/github.com-1ecc6299db9ec823/async-trait-0.1.63/src/parse.rs /Users/collegia/.cargo/registry/src/github.com-1ecc6299db9ec823/async-trait-0.1.63/src/receiver.rs
+
+/Users/collegia/Documents/projects/Rust/rust-learning/Modular/target/debug/deps/async_trait-de09a21d2a248cb3.d: /Users/collegia/.cargo/registry/src/github.com-1ecc6299db9ec823/async-trait-0.1.63/src/lib.rs /Users/collegia/.cargo/registry/src/github.com-1ecc6299db9ec823/async-trait-0.1.63/src/args.rs /Users/collegia/.cargo/registry/src/github.com-1ecc6299db9ec823/async-trait-0.1.63/src/bound.rs /Users/collegia/.cargo/registry/src/github.com-1ecc6299db9ec823/async-trait-0.1.63/src/expand.rs /Users/collegia/.cargo/registry/src/github.com-1ecc6299db9ec823/async-trait-0.1.63/src/lifetime.rs /Users/collegia/.cargo/registry/src/github.com-1ecc6299db9ec823/async-trait-0.1.63/src/parse.rs /Users/collegia/.cargo/registry/src/github.com-1ecc6299db9ec823/async-trait-0.1.63/src/receiver.rs
+
+/Users/collegia/.cargo/registry/src/github.com-1ecc6299db9ec823/async-trait-0.1.63/src/lib.rs:
+/Users/collegia/.cargo/registry/src/github.com-1ecc6299db9ec823/async-trait-0.1.63/src/args.rs:
+/Users/collegia/.cargo/registry/src/github.com-1ecc6299db9ec823/async-trait-0.1.63/src/bound.rs:
+/Users/collegia/.cargo/registry/src/github.com-1ecc6299db9ec823/async-trait-0.1.63/src/expand.rs:
+/Users/collegia/.cargo/registry/src/github.com-1ecc6299db9ec823/async-trait-0.1.63/src/lifetime.rs:
+/Users/collegia/.cargo/registry/src/github.com-1ecc6299db9ec823/async-trait-0.1.63/src/parse.rs:
+/Users/collegia/.cargo/registry/src/github.com-1ecc6299db9ec823/async-trait-0.1.63/src/receiver.rs:

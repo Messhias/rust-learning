@@ -10,8 +10,8 @@ pub enum UserStatus {
 }
 
 impl fmt::Display for UserStatus {
-    fn fmt(&self, f: &mut fmt::Formater<'_>) -> fmt::Result {
-        match self {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match *self {
             UserStatus::Inactive => write!(f, "Inactive"),
             UserStatus::Active => write!(f, "Active"),
         }
