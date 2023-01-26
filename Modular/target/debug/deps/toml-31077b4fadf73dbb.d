@@ -1,0 +1,13 @@
+/Users/collegia/Documents/projects/Rust/rust-learning/Modular/target/debug/deps/toml-31077b4fadf73dbb.rmeta: /Users/collegia/.cargo/registry/src/github.com-1ecc6299db9ec823/toml-0.5.11/src/lib.rs /Users/collegia/.cargo/registry/src/github.com-1ecc6299db9ec823/toml-0.5.11/src/map.rs /Users/collegia/.cargo/registry/src/github.com-1ecc6299db9ec823/toml-0.5.11/src/value.rs /Users/collegia/.cargo/registry/src/github.com-1ecc6299db9ec823/toml-0.5.11/src/datetime.rs /Users/collegia/.cargo/registry/src/github.com-1ecc6299db9ec823/toml-0.5.11/src/ser.rs /Users/collegia/.cargo/registry/src/github.com-1ecc6299db9ec823/toml-0.5.11/src/de.rs /Users/collegia/.cargo/registry/src/github.com-1ecc6299db9ec823/toml-0.5.11/src/tokens.rs /Users/collegia/.cargo/registry/src/github.com-1ecc6299db9ec823/toml-0.5.11/src/macros.rs /Users/collegia/.cargo/registry/src/github.com-1ecc6299db9ec823/toml-0.5.11/src/spanned.rs
+
+/Users/collegia/Documents/projects/Rust/rust-learning/Modular/target/debug/deps/toml-31077b4fadf73dbb.d: /Users/collegia/.cargo/registry/src/github.com-1ecc6299db9ec823/toml-0.5.11/src/lib.rs /Users/collegia/.cargo/registry/src/github.com-1ecc6299db9ec823/toml-0.5.11/src/map.rs /Users/collegia/.cargo/registry/src/github.com-1ecc6299db9ec823/toml-0.5.11/src/value.rs /Users/collegia/.cargo/registry/src/github.com-1ecc6299db9ec823/toml-0.5.11/src/datetime.rs /Users/collegia/.cargo/registry/src/github.com-1ecc6299db9ec823/toml-0.5.11/src/ser.rs /Users/collegia/.cargo/registry/src/github.com-1ecc6299db9ec823/toml-0.5.11/src/de.rs /Users/collegia/.cargo/registry/src/github.com-1ecc6299db9ec823/toml-0.5.11/src/tokens.rs /Users/collegia/.cargo/registry/src/github.com-1ecc6299db9ec823/toml-0.5.11/src/macros.rs /Users/collegia/.cargo/registry/src/github.com-1ecc6299db9ec823/toml-0.5.11/src/spanned.rs
+
+/Users/collegia/.cargo/registry/src/github.com-1ecc6299db9ec823/toml-0.5.11/src/lib.rs:
+/Users/collegia/.cargo/registry/src/github.com-1ecc6299db9ec823/toml-0.5.11/src/map.rs:
+/Users/collegia/.cargo/registry/src/github.com-1ecc6299db9ec823/toml-0.5.11/src/value.rs:
+/Users/collegia/.cargo/registry/src/github.com-1ecc6299db9ec823/toml-0.5.11/src/datetime.rs:
+/Users/collegia/.cargo/registry/src/github.com-1ecc6299db9ec823/toml-0.5.11/src/ser.rs:
+/Users/collegia/.cargo/registry/src/github.com-1ecc6299db9ec823/toml-0.5.11/src/de.rs:
+/Users/collegia/.cargo/registry/src/github.com-1ecc6299db9ec823/toml-0.5.11/src/tokens.rs:
+/Users/collegia/.cargo/registry/src/github.com-1ecc6299db9ec823/toml-0.5.11/src/macros.rs:
+/Users/collegia/.cargo/registry/src/github.com-1ecc6299db9ec823/toml-0.5.11/src/spanned.rs:

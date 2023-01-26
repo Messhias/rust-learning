@@ -1,0 +1,12 @@
+/Users/collegia/Documents/projects/Rust/rust-learning/Modular/target/debug/deps/fancy_regex-99f1ea9e2370ab5f.rmeta: /Users/collegia/.cargo/registry/src/github.com-1ecc6299db9ec823/fancy-regex-0.8.0/src/lib.rs /Users/collegia/.cargo/registry/src/github.com-1ecc6299db9ec823/fancy-regex-0.8.0/src/analyze.rs /Users/collegia/.cargo/registry/src/github.com-1ecc6299db9ec823/fancy-regex-0.8.0/src/compile.rs /Users/collegia/.cargo/registry/src/github.com-1ecc6299db9ec823/fancy-regex-0.8.0/src/error.rs /Users/collegia/.cargo/registry/src/github.com-1ecc6299db9ec823/fancy-regex-0.8.0/src/expand.rs /Users/collegia/.cargo/registry/src/github.com-1ecc6299db9ec823/fancy-regex-0.8.0/src/parse.rs /Users/collegia/.cargo/registry/src/github.com-1ecc6299db9ec823/fancy-regex-0.8.0/src/replacer.rs /Users/collegia/.cargo/registry/src/github.com-1ecc6299db9ec823/fancy-regex-0.8.0/src/vm.rs
+
+/Users/collegia/Documents/projects/Rust/rust-learning/Modular/target/debug/deps/fancy_regex-99f1ea9e2370ab5f.d: /Users/collegia/.cargo/registry/src/github.com-1ecc6299db9ec823/fancy-regex-0.8.0/src/lib.rs /Users/collegia/.cargo/registry/src/github.com-1ecc6299db9ec823/fancy-regex-0.8.0/src/analyze.rs /Users/collegia/.cargo/registry/src/github.com-1ecc6299db9ec823/fancy-regex-0.8.0/src/compile.rs /Users/collegia/.cargo/registry/src/github.com-1ecc6299db9ec823/fancy-regex-0.8.0/src/error.rs /Users/collegia/.cargo/registry/src/github.com-1ecc6299db9ec823/fancy-regex-0.8.0/src/expand.rs /Users/collegia/.cargo/registry/src/github.com-1ecc6299db9ec823/fancy-regex-0.8.0/src/parse.rs /Users/collegia/.cargo/registry/src/github.com-1ecc6299db9ec823/fancy-regex-0.8.0/src/replacer.rs /Users/collegia/.cargo/registry/src/github.com-1ecc6299db9ec823/fancy-regex-0.8.0/src/vm.rs
+
+/Users/collegia/.cargo/registry/src/github.com-1ecc6299db9ec823/fancy-regex-0.8.0/src/lib.rs:
+/Users/collegia/.cargo/registry/src/github.com-1ecc6299db9ec823/fancy-regex-0.8.0/src/analyze.rs:
+/Users/collegia/.cargo/registry/src/github.com-1ecc6299db9ec823/fancy-regex-0.8.0/src/compile.rs:
+/Users/collegia/.cargo/registry/src/github.com-1ecc6299db9ec823/fancy-regex-0.8.0/src/error.rs:
+/Users/collegia/.cargo/registry/src/github.com-1ecc6299db9ec823/fancy-regex-0.8.0/src/expand.rs:
+/Users/collegia/.cargo/registry/src/github.com-1ecc6299db9ec823/fancy-regex-0.8.0/src/parse.rs:
+/Users/collegia/.cargo/registry/src/github.com-1ecc6299db9ec823/fancy-regex-0.8.0/src/replacer.rs:
+/Users/collegia/.cargo/registry/src/github.com-1ecc6299db9ec823/fancy-regex-0.8.0/src/vm.rs:
