@@ -33,11 +33,9 @@ impl OurError {
         message: String,
         debug: Option<Box<dyn Error>>,
     ) -> Self {
-
         if debug.is_some() {
-            log::error!("Error: {:?}", &debug)
+            log::error!("Error: {:?}", &debug);
         }
-
         OurError {
             status,
             message,
@@ -83,5 +81,4 @@ impl OurError {
     pub fn from_uuid_error(e: uuidError) -> Self {
         OurError::new_bad_request_error(String::from("Something went wrong"), Some(Box::new(e)))
     }
-
 }

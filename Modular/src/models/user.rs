@@ -16,8 +16,9 @@ use rocket_db_pools::sqlx::{Acquire, FromRow, PgConnection};
 use rocket_db_pools::Connection;
 use uuid::Uuid;
 use zxcvbn::zxcvbn;
+use rocket::serde::Serialize;
 
-#[derive(Debug, FromRow, FromForm)]
+#[derive(Debug, FromRow, FromForm, Serialize)]
 pub struct User {
     pub uuid: Uuid,
     pub username: String,

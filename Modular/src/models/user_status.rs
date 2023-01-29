@@ -1,8 +1,9 @@
 use rocket::form::FromFormField;
 use rocket_db_pools::sqlx;
 use std::fmt;
+use rocket::serde::Serialize;
 
-#[derive(sqlx::Type, Debug, FromFormField)]
+#[derive(sqlx::Type, Debug, FromFormField, Serialize)]
 #[repr(i32)]
 pub enum UserStatus {
     Inactive = 0,

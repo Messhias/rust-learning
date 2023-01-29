@@ -7,8 +7,10 @@ use crate::models::{
 use rocket::form::{Contextual, Form};
 use rocket::http::Status;
 use rocket::request::FlashMessage;
-use rocket::response::{content::RawHtml, Flash, Redirect};
+use rocket::response::{Flash, Redirect};
+use rocket::serde::Serialize;
 use rocket_db_pools::{sqlx::Acquire, Connection};
+use rocket_dyn_templates::{context, Template};
 
 const USER_HTML_PREFIX: &str = r#"<!DOCTYPE html>
 <html lang="en">
@@ -32,21 +34,17 @@ pub async fn get_user(
         .await
         .map_err(|_| Status::InternalServerError)?;
     let user = User::find(connection, uuid).await.map_err(|e| e.status)?;
-    let mut html_string = String::from(USER_HTML_PREFIX);
-    if flash.is_some() {
-        html_string.push_str(flash.unwrap().message());
+    #[derive(Serialize)]
+    struct GetUser {
+        user: User,
+        flash: Option<String>,
     }
-    html_string.push_str(&user.to_html_string());
-    html_string
-        .push_str(format!(r#"<a href="/users/edit/{}">Edit User</a><br/>"#, user.uuid).as_ref());
-    html_string.push_str(
-        format!(
-            r#"<form accept-charset="UTF-8" action="/users/delete/{}" autocomplete="off" method="POST"><button type="submit" value="Submit">Delete</button></form>"#, user.uuid
-        )
-            .as_ref());
-    html_string.push_str(r#"<a href="/users">User List</a>"#);
-    html_string.push_str(USER_HTML_SUFFIX);
-    Ok(RawHtml(html_string))
+    let flash_message = flash.map(|fm| String::from(fm.message()));
+    let context = GetUser {
+        user,
+        flash: flash_message,
+    };
+    Ok(Template::render("users/show", &context))
 }
 
 #[get("/users?<pagination>", format = "text/html")]
@@ -57,28 +55,8 @@ pub async fn get_users(
     let (users, new_pagination) = User::find_all(&mut db, pagination)
         .await
         .map_err(|e| e.status)?;
-    let mut html_string = String::from(USER_HTML_PREFIX);
-    for user in users.iter() {
-        html_string.push_str(&user.to_html_string());
-        html_string
-            .push_str(format!(r#"<a href="/users/{}">See User</a><br/>"#, user.uuid).as_ref());
-        html_string.push_str(
-            format!(r#"<a href="/users/edit/{}">Edit User</a><br/>"#, user.uuid).as_ref(),
-        );
-    }
-    if let Some(pg) = new_pagination {
-        html_string.push_str(
-            format!(
-                r#"<a href="/users?pagination.next={}&pagination.limit={}">Next</a><br/>"#,
-                &(pg.next.0).timestamp_nanos(),
-                &pg.limit,
-            )
-                .as_ref(),
-        );
-    }
-    html_string.push_str(r#"<a href="/users/new">New user</a>"#);
-    html_string.push_str(USER_HTML_SUFFIX);
-    Ok(RawHtml(html_string))
+    let context = context! {users: users, pagination: new_pagination.map(|pg|pg.to_context())};
+    Ok(Template::render("users/index", context))
 }
 
 #[get("/users/new", format = "text/html")]
@@ -113,7 +91,7 @@ pub async fn new_user(flash: Option<FlashMessage<'_>>) -> HtmlResponse {
 </form>"#,
     );
     html_string.push_str(USER_HTML_SUFFIX);
-    Ok(RawHtml(html_string))
+    Ok(Template::render("users/tmp", context!()))
 }
 
 #[post(
@@ -206,7 +184,7 @@ pub async fn edit_user(
             .as_ref(),
     );
     html_string.push_str(USER_HTML_SUFFIX);
-    Ok(RawHtml(html_string))
+    Ok(Template::render("users/tmp", context!()))
 }
 
 #[post(

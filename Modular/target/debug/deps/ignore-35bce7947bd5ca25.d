@@ -1,0 +1,12 @@
+/Users/collegia/Documents/projects/Rust/rust-learning/Modular/target/debug/deps/ignore-35bce7947bd5ca25.rmeta: /Users/collegia/.cargo/registry/src/github.com-1ecc6299db9ec823/ignore-0.4.20/src/lib.rs /Users/collegia/.cargo/registry/src/github.com-1ecc6299db9ec823/ignore-0.4.20/src/default_types.rs /Users/collegia/.cargo/registry/src/github.com-1ecc6299db9ec823/ignore-0.4.20/src/dir.rs /Users/collegia/.cargo/registry/src/github.com-1ecc6299db9ec823/ignore-0.4.20/src/gitignore.rs /Users/collegia/.cargo/registry/src/github.com-1ecc6299db9ec823/ignore-0.4.20/src/overrides.rs /Users/collegia/.cargo/registry/src/github.com-1ecc6299db9ec823/ignore-0.4.20/src/pathutil.rs /Users/collegia/.cargo/registry/src/github.com-1ecc6299db9ec823/ignore-0.4.20/src/types.rs /Users/collegia/.cargo/registry/src/github.com-1ecc6299db9ec823/ignore-0.4.20/src/walk.rs
+
+/Users/collegia/Documents/projects/Rust/rust-learning/Modular/target/debug/deps/ignore-35bce7947bd5ca25.d: /Users/collegia/.cargo/registry/src/github.com-1ecc6299db9ec823/ignore-0.4.20/src/lib.rs /Users/collegia/.cargo/registry/src/github.com-1ecc6299db9ec823/ignore-0.4.20/src/default_types.rs /Users/collegia/.cargo/registry/src/github.com-1ecc6299db9ec823/ignore-0.4.20/src/dir.rs /Users/collegia/.cargo/registry/src/github.com-1ecc6299db9ec823/ignore-0.4.20/src/gitignore.rs /Users/collegia/.cargo/registry/src/github.com-1ecc6299db9ec823/ignore-0.4.20/src/overrides.rs /Users/collegia/.cargo/registry/src/github.com-1ecc6299db9ec823/ignore-0.4.20/src/pathutil.rs /Users/collegia/.cargo/registry/src/github.com-1ecc6299db9ec823/ignore-0.4.20/src/types.rs /Users/collegia/.cargo/registry/src/github.com-1ecc6299db9ec823/ignore-0.4.20/src/walk.rs
+
+/Users/collegia/.cargo/registry/src/github.com-1ecc6299db9ec823/ignore-0.4.20/src/lib.rs:
+/Users/collegia/.cargo/registry/src/github.com-1ecc6299db9ec823/ignore-0.4.20/src/default_types.rs:
+/Users/collegia/.cargo/registry/src/github.com-1ecc6299db9ec823/ignore-0.4.20/src/dir.rs:
+/Users/collegia/.cargo/registry/src/github.com-1ecc6299db9ec823/ignore-0.4.20/src/gitignore.rs:
+/Users/collegia/.cargo/registry/src/github.com-1ecc6299db9ec823/ignore-0.4.20/src/overrides.rs:
+/Users/collegia/.cargo/registry/src/github.com-1ecc6299db9ec823/ignore-0.4.20/src/pathutil.rs:
+/Users/collegia/.cargo/registry/src/github.com-1ecc6299db9ec823/ignore-0.4.20/src/types.rs:
+/Users/collegia/.cargo/registry/src/github.com-1ecc6299db9ec823/ignore-0.4.20/src/walk.rs:

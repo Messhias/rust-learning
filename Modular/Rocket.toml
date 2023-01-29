@@ -1,4 +1,5 @@
 [default]
 log_level = "normal"
+template_dir = "src/views"
 [default.databases.main_connection]
 url='postgresql://localhost:5432/rust_learning'
