@@ -12,17 +12,6 @@ use rocket::serde::Serialize;
 use rocket_db_pools::{sqlx::Acquire, Connection};
 use rocket_dyn_templates::{context, Template};
 
-const USER_HTML_PREFIX: &str = r#"<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="utf-8" />
-<title>Our Application User</title>
-</head>
-<body>"#;
-
-const USER_HTML_SUFFIX: &str = r#"</body>
-</html>"#;
-
 #[get("/users/<uuid>", format = "text/html")]
 pub async fn get_user(
     mut db: Connection<DBConnection>,
@@ -61,37 +50,17 @@ pub async fn get_users(
 
 #[get("/users/new", format = "text/html")]
 pub async fn new_user(flash: Option<FlashMessage<'_>>) -> HtmlResponse {
-    let mut html_string = String::from(USER_HTML_PREFIX);
-    if flash.is_some() {
-        html_string.push_str(flash.unwrap().message());
-    }
-    html_string.push_str(
-        r#"<form accept-charset="UTF-8" action="/users" autocomplete="off" method="POST">
-    <div>
-        <label for="username">Username:</label>
-        <input name="username" type="text"/>
-    </div>
-    <div>
-        <label for="email">Email:</label>
-        <input name="email" type="email"/>
-    </div>
-    <div>
-        <label for="password">Password:</label>
-        <input name="password" type="password"/>
-    </div>
-    <div>
-        <label for="password_confirmation">Password Confirmation:</label>
-        <input name="password_confirmation" type="password"/>
-    </div>
-    <div>
-        <label for="description">Tell us a little bit more about yourself:</label>
-        <textarea name="description"></textarea>
-    </div>
-    <button type="submit" value="Submit">Submit</button>
-</form>"#,
-    );
-    html_string.push_str(USER_HTML_SUFFIX);
-    Ok(Template::render("users/tmp", context!()))
+    let flash_string = flash
+        .map(|fl| format!("{}", fl.message()))
+        .unwrap_or_else(|| "".to_string());
+
+    let context = context! {
+        edit: false,
+        form_url: "/users",
+        legend: "New User",
+        flash: flash_string,
+    };
+    Ok(Template::render("/users/form", context))
 }
 
 #[post(
@@ -137,54 +106,25 @@ pub async fn edit_user(
     uuid: &str,
     flash: Option<FlashMessage<'_>>,
 ) -> HtmlResponse {
+
     let connection = db
         .acquire()
         .await
         .map_err(|_| Status::InternalServerError)?;
     let user = User::find(connection, uuid).await.map_err(|e| e.status)?;
-    let mut html_string = String::from(USER_HTML_PREFIX);
-    if flash.is_some() {
-        html_string.push_str(flash.unwrap().message());
-    }
-    html_string.push_str(
-        format!(
-            r#"<form accept-charset="UTF-8" action="/users/{}" autocomplete="off" method="POST">
-    <input type="hidden" name="_METHOD" value="PUT"/>
-    <div>
-        <label for="username">Username:</label>
-        <input name="username" type="text" value="{}"/>
-    </div>
-    <div>
-        <label for="email">Email:</label>
-        <input name="email" type="email" value="{}"/>
-    </div>
-    <div>
-        <label for="old_password">Old password:</label>
-        <input name="old_password" type="password"/>
-    </div>
-    <div>
-        <label for="password">New password:</label>
-        <input name="password" type="password"/>
-    </div>
-    <div>
-        <label for="password_confirmation">Password Confirmation:</label>
-        <input name="password_confirmation" type="password"/>
-    </div>
-    <div>
-        <label for="description">Tell us a little bit more about yourself:</label>
-        <textarea name="description">{}</textarea>
-    </div>
-    <button type="submit" value="Submit">Submit</button>
-</form>"#,
-            &user.uuid,
-            &user.username,
-            &user.email,
-            &user.description.unwrap_or_else(|| "".to_string()),
-        )
-            .as_ref(),
-    );
-    html_string.push_str(USER_HTML_SUFFIX);
-    Ok(Template::render("users/tmp", context!()))
+    let flash_string = flash
+        .map(|flash| format!("{}", flash.message()))
+        .unwrap_or_else(|| "".to_string());
+
+    let context = context! {
+        form_url: format!("users/{}", &user.uuid),
+        edit: true,
+        legend: "Edit User",
+        flash: flash_string,
+        user,
+    };
+
+    Ok(Template::render("users/form", context))
 }
 
 #[post(
@@ -224,9 +164,9 @@ pub async fn update_user<'r>(
 }
 
 #[put(
-"/users/<uuid>",
-format = "application/x-www-form-urlencoded",
-data = "<user_context>"
+    "/users/<uuid>",
+    format = "application/x-www-form-urlencoded",
+    data = "<user_context>"
 )]
 pub async fn put_user<'r>(
     mut db: Connection<DBConnection>,
