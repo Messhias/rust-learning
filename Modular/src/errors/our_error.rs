@@ -1,9 +1,9 @@
 use rocket::http::Status;
+use sqlx::Error as sqlxError;
+use std::borrow::Cow;
 use std::error::Error;
 use std::fmt;
-use sqlx::Error as sqlxError;
 use uuid::Error as uuidError;
-use std::borrow::Cow;
 
 #[derive(Debug)]
 pub struct OurError {
@@ -20,23 +20,25 @@ impl fmt::Display for OurError {
 
 impl Error for OurError {
     fn source(&self) -> Option<&(dyn Error + 'static)> {
-        if self.debug.is_some {
+        if self.debug.is_some() {
             self.debug.as_ref().unwrap().source();
         }
-
         None
     }
 }
 
 impl OurError {
-    fn new_error_with_status(status: Status, message: String, debug: Option<Box<dyn Error>>) -> Self {
+    fn new_error_with_status(
+        status: Status,
+        message: String,
+        debug: Option<Box<dyn Error>>,
+    ) -> Self {
         OurError {
             status,
             message,
             debug,
         }
     }
-
     pub fn new_bad_request_error(message: String, debug: Option<Box<dyn Error>>) -> Self {
         Self::new_error_with_status(Status::BadRequest, message, debug)
     }
@@ -46,29 +48,16 @@ impl OurError {
     }
 
     pub fn new_internal_server_error(message: String, debug: Option<Box<dyn Error>>) -> Self {
-        self::new_error_with_status(Status::InternalServerError, message, debug)
-    }
-
-    pub fn from_uuid_error(e: uuidError) -> Self {
-        OurError::new_bad_request_error(
-            String::from("Something went wrong"),
-            Some(Box::new(e)),
-        )
+        Self::new_error_with_status(Status::InternalServerError, message, debug)
     }
 
     pub fn from_sqlx_error(e: sqlxError) -> Self {
         match e {
             sqlxError::RowNotFound => {
-                OurError::new_not_found_error(
-                    String::from("Not found"),
-                    Some(Box::new(e)),
-                )
+                OurError::new_not_found_error(String::from("Not found"), Some(Box::new(e)))
             }
             sqlxError::Database(db) => {
-                if db.code.unwrap_or(
-                    Cow::borrowed("2300")
-                        .starts_with("23")
-                ) {
+                if db.code().unwrap_or(Cow::Borrowed("2300")).starts_with("23") {
                     return OurError::new_bad_request_error(
                         String::from("Cannot create or update resource"),
                         Some(Box::new(db)),
@@ -82,7 +71,11 @@ impl OurError {
             _ => OurError::new_internal_server_error(
                 String::from("Something went wrong"),
                 Some(Box::new(e)),
-            )
+            ),
         }
+    }
+
+    pub fn from_uuid_error(e: uuidError) -> Self {
+        OurError::new_bad_request_error(String::from("Something went wrong"), Some(Box::new(e)))
     }
 }

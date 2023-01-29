@@ -31,9 +31,7 @@ pub async fn get_user(
         .acquire()
         .await
         .map_err(|_| Status::InternalServerError)?;
-    let user = User::find(connection, uuid)
-        .await
-        .map_err(|e| e.status)?;
+    let user = User::find(connection, uuid).await.map_err(|e| e.status)?;
     let mut html_string = String::from(USER_HTML_PREFIX);
     if flash.is_some() {
         html_string.push_str(flash.unwrap().message());
@@ -41,14 +39,12 @@ pub async fn get_user(
     html_string.push_str(&user.to_html_string());
     html_string
         .push_str(format!(r#"<a href="/users/edit/{}">Edit User</a><br/>"#, user.uuid).as_ref());
-    html_string.push_str(r#"<a href="/users">User List</a>"#);
     html_string.push_str(
-        format!(r#"
-            <form accept-charset="UTF-8" action="/users/delete/{}" autocomplete="off" method="post">
-                <button type="submit" value="submit">Delete</button></form>
-            </form>
-        "#, user.uuid).as_ref()
-    );
+        format!(
+            r#"<form accept-charset="UTF-8" action="/users/delete/{}" autocomplete="off" method="POST"><button type="submit" value="Submit">Delete</button></form>"#, user.uuid
+        )
+            .as_ref());
+    html_string.push_str(r#"<a href="/users">User List</a>"#);
     html_string.push_str(USER_HTML_SUFFIX);
     Ok(RawHtml(html_string))
 }
@@ -60,18 +56,14 @@ pub async fn get_users(
 ) -> HtmlResponse {
     let (users, new_pagination) = User::find_all(&mut db, pagination)
         .await
-        .map_err(|_| Status::NotFound)?;
+        .map_err(|e| e.status)?;
     let mut html_string = String::from(USER_HTML_PREFIX);
     for user in users.iter() {
         html_string.push_str(&user.to_html_string());
         html_string
             .push_str(format!(r#"<a href="/users/{}">See User</a><br/>"#, user.uuid).as_ref());
         html_string.push_str(
-            format!(r#"
-                <a href="/users/edit/{}">Edit User</a><br/>
-                <br />
-                <hr />
-            "#, user.uuid).as_ref(),
+            format!(r#"<a href="/users/edit/{}">Edit User</a><br/>"#, user.uuid).as_ref(),
         );
     }
     if let Some(pg) = new_pagination {
@@ -152,12 +144,9 @@ pub async fn create_user<'r>(
             "<div>Something went wrong when creating user</div>",
         )
     })?;
-    let user = User::create(connection, new_user).await.map_err(|_| {
-        Flash::error(
-            Redirect::to("/users/new"),
-            "<div>Something went wrong when creating user</div>",
-        )
-    })?;
+    let user = User::create(connection, new_user)
+        .await
+        .map_err(|e| Flash::error(Redirect::to("/users/new"), format!("<div>{}</div>", e)))?;
     Ok(Flash::success(
         Redirect::to(format!("/users/{}", user.uuid)),
         "<div>Successfully created user</div>",
@@ -174,9 +163,7 @@ pub async fn edit_user(
         .acquire()
         .await
         .map_err(|_| Status::InternalServerError)?;
-    let user = User::find(connection, uuid)
-        .await
-        .map_err(|_| Status::NotFound)?;
+    let user = User::find(connection, uuid).await.map_err(|e| e.status)?;
     let mut html_string = String::from(USER_HTML_PREFIX);
     if flash.is_some() {
         html_string.push_str(flash.unwrap().message());
@@ -269,10 +256,10 @@ pub async fn put_user<'r>(
     user_context: Form<Contextual<'r, EditedUser<'r>>>,
 ) -> Result<Flash<Redirect>, Flash<Redirect>> {
     let user_value = user_context.value.as_ref().unwrap();
-    let user = User::update(&mut db, uuid, user_value).await.map_err(|_| {
+    let user = User::update(&mut db, uuid, user_value).await.map_err(|e| {
         Flash::error(
             Redirect::to(format!("/users/edit/{}", uuid)),
-            "<div>Something went wrong when updating user</div>",
+            format!("<div>{}</div>", e),
         )
     })?;
     Ok(Flash::success(
@@ -294,13 +281,18 @@ pub async fn patch_user<'r>(
     put_user(db, uuid, user_context).await
 }
 
-#[delete(
-    "/users/<uuid>",
-    format = "application/x-www-form-urlencoded"
-)]
+#[post("/users/delete/<uuid>", format = "application/x-www-form-urlencoded")]
+pub async fn delete_user_entry_point(
+    db: Connection<DBConnection>,
+    uuid: &str,
+) -> Result<Flash<Redirect>, Flash<Redirect>> {
+    delete_user(db, uuid).await
+}
+
+#[delete("/users/<uuid>", format = "application/x-www-form-urlencoded")]
 pub async fn delete_user(
     mut db: Connection<DBConnection>,
-    uuid: &str
+    uuid: &str,
 ) -> Result<Flash<Redirect>, Flash<Redirect>> {
     let connection = db.acquire().await.map_err(|_| {
         Flash::error(
@@ -308,30 +300,11 @@ pub async fn delete_user(
             "<div>Something went wrong when deleting user</div>",
         )
     })?;
-
-    User::destroy(connection, uuid).await.map_err(|e| {
-        Flash::error(
-            Redirect::to("/users"),
-            "<div>{}</div>",
-            e
-        )
-    })?;
-
-    Ok(
-        Flash::success(
-            Redirect::to("/users"),
-            "<div>Successfully deleted user</div>"
-        )
-    )
-}
-
-#[post(
-    "/users/delete/<uuid>",
-    format = "application/x-www-form-urlencoded"
-)]
-pub async fn delete_user_entry_point(
-    db: Connection<DBConnection>,
-    uuid: &str,
-) -> Result<Flash<Redirect>, Flash<Redirect>> {
-    delete_user(db, uuid).await
+    User::destroy(connection, uuid)
+        .await
+        .map_err(|e| Flash::error(Redirect::to("/users"), format!("<div>{}</div>", e)))?;
+    Ok(Flash::success(
+        Redirect::to("/users"),
+        "<div>Successfully deleted user</div>",
+    ))
 }
