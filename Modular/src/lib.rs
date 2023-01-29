@@ -7,3 +7,4 @@ pub mod models;
 pub mod routes;
 pub mod states;
 pub mod traits;
+pub mod errors;

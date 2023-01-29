@@ -6,9 +6,11 @@ use modular::fairings::db::DBConnection;
 use modular::routes::{self, post, user};
 use rocket::{Build, Rocket};
 use rocket_db_pools::Database;
+use modular::routes::shutdown;
 
 #[launch]
 async fn rocket() -> Rocket<Build> {
+
     rocket::build()
         .attach(DBConnection::init())
         .mount(
@@ -28,6 +30,7 @@ async fn rocket() -> Rocket<Build> {
                 post::get_posts,
                 post::create_post,
                 post::delete_post,
+                shutdown,
             ],
         )
         .mount("/assets", routes![routes::assets])

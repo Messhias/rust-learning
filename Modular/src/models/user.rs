@@ -4,6 +4,7 @@ use super::our_date_time::OurDateTime;
 use super::pagination::{Pagination, DEFAULT_LIMIT};
 use super::user_status::UserStatus;
 use crate::fairings::db::DBConnection;
+use crate::errors::our_error::OurError;
 use argon2::{
     password_hash::{rand_core::OsRng, PasswordHash, PasswordHasher, PasswordVerifier, SaltString},
     Argon2,
@@ -30,13 +31,15 @@ pub struct User {
 }
 
 impl User {
-    pub async fn find(connection: &mut PgConnection, uuid: &str) -> Result<Self, Box<dyn Error>> {
-        let parsed_uuid = Uuid::parse_str(uuid)?;
+    pub async fn find(connection: &mut PgConnection, uuid: &str) -> Result<Self, OurError> {
+        let parsed_uuid = Uuid::parse_str(uuid).map_err(OurError::from_uuid_error)?;
         let query_str = "SELECT * FROM users WHERE uuid = $1";
         Ok(sqlx::query_as::<_, Self>(query_str)
             .bind(parsed_uuid)
             .fetch_one(connection)
-            .await?)
+            .await
+            .map_err(OurError::from_sqlx_error)?
+        )
     }
 
     pub async fn find_all(
@@ -116,7 +119,13 @@ impl User {
         let description = &(new_user.description.map(|desc| clean_html(desc)));
         let salt = SaltString::generate(&mut OsRng);
         let argon2 = Argon2::default();
-        let password_hash = argon2.hash_password(new_user.password.as_bytes(), &salt);
+        let password_hash = argon2.hash_password(new_user.password.as_bytes(), &salt)
+            .map_err(|e| {
+                OurError::new_internal_server(
+                    String::from("Something went wrong"),
+                    Some(Box::new(e)),
+                )
+            });
         if password_hash.is_err() {
             return Err("cannot create password hash".into());
         }
@@ -133,7 +142,14 @@ RETURNING *"#;
             .bind(description)
             .bind(UserStatus::Inactive)
             .fetch_one(connection)
-            .await?)
+            .await
+            .map_err(|e| {
+                OurError::new_internal_server_error(
+                    String::from("Something went wrong"),
+                    Some(Box::new(e)),
+                )
+            })
+        )
     }
 
     pub async fn update<'r>(
@@ -222,13 +238,13 @@ RETURNING *"#;
 
 #[derive(Debug, FromForm)]
 pub struct NewUser<'r> {
-    #[field(validate = len(5..20).or_else(msg!("name cannot be empty")))]
+    #[field(validate = len(5..20).or_else(msg ! ("name cannot be empty")))]
     pub username: &'r str,
-    #[field(validate = validate_email().or_else(msg!("invalid email")))]
+    #[field(validate = validate_email().or_else(msg ! ("invalid email")))]
     pub email: &'r str,
-    #[field(validate = validate_password().or_else(msg!("weak password")))]
+    #[field(validate = validate_password().or_else(msg ! ("weak password")))]
     pub password: &'r str,
-    #[field(validate = eq(self.password).or_else(msg!("password confirmation mismatch")))]
+    #[field(validate = eq(self.password).or_else(msg ! ("password confirmation mismatch")))]
     pub password_confirmation: &'r str,
     #[field(default = "")]
     pub description: Option<&'r str>,
@@ -238,9 +254,9 @@ pub struct NewUser<'r> {
 pub struct EditedUser<'r> {
     #[field(name = "_METHOD")]
     pub method: &'r str,
-    #[field(validate = len(5..20).or_else(msg!("name cannot be empty")))]
+    #[field(validate = len(5..20).or_else(msg ! ("name cannot be empty")))]
     pub username: &'r str,
-    #[field(validate = validate_email().or_else(msg!("invalid email")))]
+    #[field(validate = validate_email().or_else(msg ! ("invalid email")))]
     pub email: &'r str,
     pub old_password: &'r str,
     #[field(validate = skip_validate_password(self.old_password, self.password_confirmation))]
