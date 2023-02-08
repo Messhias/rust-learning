@@ -3,7 +3,7 @@ extern crate rocket;
 
 use log::LevelFilter;
 use modular::catchers;
-use modular::fairings::db::DBConnection;
+use modular::fairings::{db::DBConnection, csrf::Csrf};
 use modular::routes::{self, post, user};
 use rocket::fs::relative;
 use rocket::fs::FileServer;
@@ -18,6 +18,7 @@ async fn rocket() -> Rocket<Build> {
     rocket::build()
         .attach(DBConnection::init())
         .attach(Template::fairing())
+        .attach(Csrf::new())
         .mount(
             "/",
             routes![

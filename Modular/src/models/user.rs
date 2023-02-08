@@ -258,6 +258,7 @@ pub struct NewUser<'r> {
     pub password_confirmation: &'r str,
     #[field(default = "")]
     pub description: Option<&'r str>,
+    pub authenticity_token: &'r str,
 }
 
 #[derive(Debug, FromForm)]
@@ -274,6 +275,7 @@ pub struct EditedUser<'r> {
     pub password_confirmation: &'r str,
     #[field(default = "")]
     pub description: Option<&'r str>,
+    pub authenticity_token: &'r str,
 }
 
 fn validate_email(email: &str) -> form::Result<'_, ()> {
